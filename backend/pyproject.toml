@@ -1,5 +1,5 @@
 [project]
-name = "flood-simulation-api"
+name = "hydrosim-api"
 version = "0.1.0"
 description = "FastAPI backend for interactive river flood simulation & hydraulic modeling"
 requires-python = ">=3.11"

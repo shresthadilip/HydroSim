@@ -1,0 +1,53 @@
+name: Deploy HydroSim Backend to VPS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to VPS via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Execute Remote Deployment via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST || secrets.HOST }}
+          username: ${{ secrets.VPS_USERNAME || secrets.USERNAME || 'root' }}
+          key: ${{ secrets.VPS_SSH_KEY || secrets.SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || secrets.PORT || 22 }}
+          script: |
+            set -e
+            echo "Starting HydroSim deployment on VPS..."
+            
+            # 1. Pull latest code in repository
+            cd /var/www/HydroSim
+            git pull origin main
+            
+            # 2. Sync backend dependencies
+            cd backend
+            if command -v uv &> /dev/null; then
+              uv sync
+            elif [ -d ".venv" ]; then
+              source .venv/bin/activate
+              pip install -e .
+            else
+              python3 -m venv .venv
+              source .venv/bin/activate
+              pip install -e .
+            fi
+            
+            # 3. Restart and verify systemd service
+            sudo systemctl restart hydrosim
+            sudo systemctl status hydrosim --no-pager
+            
+            echo "HydroSim backend successfully deployed and running!"

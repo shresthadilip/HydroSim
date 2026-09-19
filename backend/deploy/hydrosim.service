@@ -1,0 +1,16 @@
+[Unit]
+Description=HydroSim 3D FastAPI Backend
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/var/www/HydroSim/backend
+EnvironmentFile=-/var/www/HydroSim/backend/.env
+ExecStart=/var/www/HydroSim/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --workers 2
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

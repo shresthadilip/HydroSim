@@ -336,6 +336,14 @@ Open `http://localhost:3000` in your web browser.
 
 ---
 
+## Production Deployment & CI/CD
+
+For full production deployment instructions (FastAPI on VPS, Nginx reverse proxy on port 8001, Certbot SSL, Vercel frontend integration, and GitHub Actions automated deployment workflow), see:
+
+👉 **[Complete Deployment Guide (DEPLOYMENT.md)](file:///d:/Projects/neuron/personal/rasuwa-flood/DEPLOYMENT.md)**
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
