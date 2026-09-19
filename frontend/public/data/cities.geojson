@@ -1,0 +1,606 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.2070031,
+          28.0717737
+        ]
+      },
+      "properties": {
+        "id": "7c750f78-63fb-49fc-ad56-f966f2c40a20",
+        "name": "मैलुङ",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1911972,
+          28.0292002
+        ]
+      },
+      "properties": {
+        "id": "787730b5-d693-42ce-8f19-27d39ce31c59",
+        "name": "सिम्ले",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1703311,
+          27.9603671
+        ]
+      },
+      "properties": {
+        "id": "e97c5510-1f50-48c0-9634-3c9b208ffcd5",
+        "name": "भैंसे",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "highlight": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1859528,
+          27.9731085
+        ]
+      },
+      "properties": {
+        "id": "d194b643-bbf7-4b08-b9d4-26a826a8eb72",
+        "name": "बेत्रावती",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "name_en": "Betrawati",
+        "flood_profile": true,
+        "flood_order": 7,
+        "flood_time": "09:24:00",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1825623,
+          27.984691
+        ]
+      },
+      "properties": {
+        "id": "5d47d4b4-28f9-47d4-943f-80e3e26b729a",
+        "name": "नौविसे फाँट",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.590809,
+          27.8820254
+        ]
+      },
+      "properties": {
+        "id": "51c7f6de-2bb1-46b7-87aa-df397d078c1b",
+        "name": "Silintar",
+        "population": null,
+        "region": "NP-P4",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.9052684,
+          27.8044981
+        ]
+      },
+      "properties": {
+        "id": "0b08727d-db83-4cdb-a757-08c657b5c626",
+        "name": "घाटबेंसी",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.7516264,
+          27.8038614
+        ]
+      },
+      "properties": {
+        "id": "ad252f72-2df4-4a03-9838-124c0eeb2226",
+        "name": "Dhussa",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.7724679,
+          27.8106448
+        ]
+      },
+      "properties": {
+        "id": "259fbb72-fa02-4219-8f1c-c28066e16367",
+        "name": "Ghyalchok",
+        "population": null,
+        "region": "NP-P4",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.769707,
+          27.8074205
+        ]
+      },
+      "properties": {
+        "id": "de25ae42-219b-4efe-833e-24cba16dfc39",
+        "name": "बेनीघाट रोराङ गाउँपालिका",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.8083472,
+          27.8163594
+        ]
+      },
+      "properties": {
+        "id": "07f2f157-2c0f-4399-a892-84a3a340e46d",
+        "name": "सलाङघाट",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.836209,
+          27.8062193
+        ]
+      },
+      "properties": {
+        "id": "b2a22f51-e765-432e-8027-d33cf7870d94",
+        "name": "Old मलेखु",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.82724,
+          27.813705
+        ]
+      },
+      "properties": {
+        "id": "dab11360-c288-458a-a8b8-8ea03d208cc8",
+        "name": "मलेखु",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "highlight": true,
+        "name_en": "Malekhu",
+        "flood_profile": true,
+        "flood_order": 10,
+        "flood_time": null,
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.661724,
+          27.8428051
+        ]
+      },
+      "properties": {
+        "id": "fd32c136-344c-4d18-9fdf-dacee6b41e89",
+        "name": "फिस्लिङ",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.560951,
+          27.8561616
+        ]
+      },
+      "properties": {
+        "id": "3af007c4-4d11-4152-bf4e-81fd7d146c25",
+        "name": "मुग्लिङ",
+        "population": 1500,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "highlight": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.980042,
+          27.8010451
+        ]
+      },
+      "properties": {
+        "id": "051f83bd-b5f3-4e6d-8a41-f4138587a7da",
+        "name": "महेश-दोभान",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.94289581454476,
+          27.80684445
+        ]
+      },
+      "properties": {
+        "id": "cd5a21ae-c895-4000-a916-ff317a9946d7",
+        "name": "Adamghat",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.942947,
+          27.8069683
+        ]
+      },
+      "properties": {
+        "id": "d635422a-0425-491c-a5fb-1e852a6503b5",
+        "name": "आदमघाट",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1100635,
+          27.8600323
+        ]
+      },
+      "properties": {
+        "id": "c6d22f80-c43d-4473-985e-d131a2731639",
+        "name": "देवीघाट",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "highlight": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.3777789,
+          28.2777749
+        ]
+      },
+      "properties": {
+        "id": "4a07a599-a481-45f4-9dae-1057a5739477",
+        "name": "रसुवागढी",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap",
+        "highlight": true,
+        "name_en": "Rasuwagadhi (Rashuwa)",
+        "flood_profile": true,
+        "flood_order": 3,
+        "flood_time": "08:44:00",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.4357,
+          27.6765
+        ]
+      },
+      "properties": {
+        "id": "",
+        "name": "Narayanghat",
+        "population": null,
+        "region": "NP",
+        "source": "manual mapping",
+        "highlight": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.4291274,
+          28.3385054
+        ]
+      },
+      "properties": {
+        "id": "b7ae12cb-181a-40b7-9e5f-e0d22c13fd0c",
+        "name": "Seqiong Village",
+        "name_en": "Seqiong Village",
+        "population": null,
+        "region": "CN",
+        "source": "OpenStreetMap (Overpass, 色琼村/Sêrqung)",
+        "flood_profile": true,
+        "flood_order": 1,
+        "flood_time": "08:41:00",
+        "note": "Village in Gyirong County, Tibet (China side of border), upper Bhote Koshi headwaters",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.4025572,
+          28.320307
+        ]
+      },
+      "properties": {
+        "id": "7e4d18f1-eda9-44cd-9671-2a09055b7177",
+        "name": "Labi Village",
+        "name_en": "Labi Village",
+        "population": null,
+        "region": "CN",
+        "source": "OpenStreetMap (Overpass, 拉比村/Labi)",
+        "flood_profile": true,
+        "flood_order": 2,
+        "flood_time": "08:42:00",
+        "note": "Village in Gyirong County, Tibet (China side of border), upper Bhote Koshi headwaters",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.3666715,
+          28.2528483
+        ]
+      },
+      "properties": {
+        "id": "5d401a12-e14a-4073-9c87-0c9753e37210",
+        "name": "Timure",
+        "name_en": "Timure",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap (Overpass, टिमुरे/Timure); cross-checked with bridge_damage.geojson Timure Bridge points",
+        "flood_profile": true,
+        "flood_order": 4,
+        "flood_time": "08:46:00",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.3399278,
+          28.1643861
+        ]
+      },
+      "properties": {
+        "id": "3822b24f-873f-4f9c-8c9b-0accd32d697a",
+        "name": "SyapruBesi",
+        "name_en": "Syabrubesi",
+        "population": null,
+        "region": "NP-P3",
+        "source": "bridge_damage.geojson (Hydropower Bailey Bridge at Bhotekoshi, Syaphrubeshi)",
+        "flood_profile": true,
+        "flood_order": 5,
+        "flood_time": "08:50:00",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.2,
+          28.05
+        ]
+      },
+      "properties": {
+        "id": "3b0e0210-d1c0-487c-bd50-f1b07df77a80",
+        "name": "Ghale Gaun",
+        "name_en": "Ghale Gaun",
+        "population": null,
+        "region": "NP-P3",
+        "source": "manual estimate - unverified in OSM, placed between Syabrubesi and Betrawati near flood-hit Khalte/Gogane area",
+        "flood_profile": true,
+        "flood_order": 6,
+        "flood_time": null,
+        "note": "Coordinates approximate; please verify/correct",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.1479929,
+          27.9231601
+        ]
+      },
+      "properties": {
+        "id": "b95d9637-7b71-4a19-9b0d-f93cfef40c79",
+        "name": "Trishuli Bridge",
+        "name_en": "Trishuli Bazaar",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap (Overpass, town node \"Trishuli\"); see also bridge_damage.geojson Trisuli Bazzar bridges",
+        "flood_profile": true,
+        "flood_order": 8,
+        "flood_time": null,
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          85.146446,
+          27.89526
+        ]
+      },
+      "properties": {
+        "id": "9620c5b4-e17a-4a7e-a48d-562990efaa7c",
+        "name": "Bidur",
+        "name_en": "Bidur",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap (Overpass, बिदुर/Bidur town)",
+        "flood_profile": true,
+        "flood_order": 9,
+        "flood_time": "09:38:00",
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.4236085,
+          27.7503594
+        ]
+      },
+      "properties": {
+        "id": "93ee752f-9d8f-4be3-94a2-19f46c0b7f6e",
+        "name": "Devpur",
+        "name_en": "Devpur",
+        "population": null,
+        "region": "NP-P4",
+        "source": "OpenStreetMap Nominatim (Devpur, Devghat, Tanahun)",
+        "flood_profile": true,
+        "flood_order": 11,
+        "flood_time": null,
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.4301652,
+          27.6811896
+        ]
+      },
+      "properties": {
+        "id": "fb41330f-2e64-418d-a1e8-78063b6f5f6b",
+        "name": "Bharatpur",
+        "name_en": "Bharatpur",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap Nominatim (भरतपुर, Bharatpur Metropolitan City, Chitwan)",
+        "flood_profile": true,
+        "flood_order": 12,
+        "flood_time": null,
+        "flood_reached": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.2976484,
+          27.6179943
+        ]
+      },
+      "properties": {
+        "id": "26d3ee4d-f8e0-4baa-a74f-658a8c949fbd",
+        "name": "Chanauli",
+        "name_en": "Chanauli",
+        "population": null,
+        "region": "NP-P3",
+        "source": "OpenStreetMap Nominatim (Chanauli, Bharatpur-18, Chitwan)",
+        "flood_profile": true,
+        "flood_order": 13,
+        "flood_time": null,
+        "flood_reached": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+# =============================================================================
+# Root .gitignore for HydroSim 3D (Rasuwa Flood Routing & Risk Analysis)
+# =============================================================================
+
+# Operating System & Editor Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor configurations
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# -----------------------------------------------------------------------------
+# Python / Backend
+# -----------------------------------------------------------------------------
+backend/.venv/
+backend/venv/
+backend/env/
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+backend/*/*/*/__pycache__/
+*.py[cod]
+*$py.class
+
+# Python Distribution & Build
+backend/build/
+backend/dist/
+backend/*.egg-info/
+backend/.eggs/
+
+# Python Testing & Type Checking
+backend/.pytest_cache/
+backend/.coverage
+backend/htmlcov/
+backend/.mypy_cache/
+backend/.ruff_cache/
+
+# -----------------------------------------------------------------------------
+# Next.js / Frontend
+# -----------------------------------------------------------------------------
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# Frontend Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# TypeScript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# Vercel & Deployment
+frontend/.vercel/
+
+# -----------------------------------------------------------------------------
+# Temporary & Generated Artifacts
+# -----------------------------------------------------------------------------
+*.log
+tmp/
+temp/

@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --background: #020617;
+  --foreground: #f8fafc;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbar for sleek dark glass look */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+/* Maplibre UI dark overrides */
+.maplibregl-ctrl-group {
+  background-color: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(51, 65, 85, 0.6) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.maplibregl-ctrl-group button {
+  border-bottom: 1px solid rgba(51, 65, 85, 0.4) !important;
+}
+
+.maplibregl-ctrl-group button:last-child {
+  border-bottom: none !important;
+}
+
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
