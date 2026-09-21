@@ -1,7 +1,7 @@
 "use client";
 
-import { SimulationResponse } from "@/types/simulation";
-import { AlertTriangle, Home, Clock, ArrowDownRight, Layers, Maximize2, ShieldAlert } from "lucide-react";
+import { SimulationResponse, AffectedCity } from "@/types/simulation";
+import { Home, Navigation } from "lucide-react";
 
 interface ImpactStatsProps {
   simulationResult: SimulationResponse;
@@ -10,6 +10,8 @@ interface ImpactStatsProps {
   onToggleAffectedZone?: () => void;
   showBufferZone?: boolean;
   onToggleBufferZone?: () => void;
+  selectedSettlement?: AffectedCity | null;
+  onSelectSettlement?: (settlement: AffectedCity) => void;
 }
 
 export default function ImpactStats({
@@ -19,6 +21,8 @@ export default function ImpactStats({
   onToggleAffectedZone,
   showBufferZone = true,
   onToggleBufferZone,
+  selectedSettlement,
+  onSelectSettlement,
 }: ImpactStatsProps) {
   const { summary, affected_settlements } = simulationResult;
 
@@ -92,27 +96,43 @@ export default function ImpactStats({
         </span>
       </div>
 
-      {/* Affected Settlements List */}
+      {/* Affected Settlements List (Clickable to Fly on 3D Map) */}
       <div className="overflow-y-auto max-h-[260px] pr-1 space-y-1.5 custom-scrollbar">
         {affected_settlements.map((city, idx) => {
           const reached = city.distance_km <= currentDistanceKm + 0.5;
+          const isSelected = selectedSettlement?.name === city.name;
+
           return (
-            <div
+            <button
               key={idx}
-              className={`flex items-center justify-between p-2 rounded-xl border text-xs transition-all ${
-                reached
-                  ? "bg-red-950/40 border-red-800/70 text-white shadow-sm"
-                  : "bg-slate-800/40 border-slate-700/40 text-slate-400"
+              type="button"
+              onClick={() => onSelectSettlement?.(city)}
+              className={`w-full text-left flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer group ${
+                isSelected
+                  ? "bg-cyan-950/70 border-cyan-400 ring-2 ring-cyan-400/50 shadow-lg shadow-cyan-500/20"
+                  : reached
+                  ? "bg-red-950/40 border-red-800/70 text-white hover:bg-red-900/50 hover:border-red-500 shadow-sm"
+                  : "bg-slate-800/40 border-slate-700/40 text-slate-400 hover:bg-slate-800/80 hover:border-slate-500"
               }`}
+              title={`Click to fly 3D camera to ${city.name}`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <span
-                  className={`w-2.5 h-2.5 rounded-full ${
-                    reached ? "bg-red-500 animate-pulse ring-4 ring-red-500/20" : "bg-slate-600"
+                  className={`w-2.5 h-2.5 rounded-full shrink-0 transition-transform group-hover:scale-125 ${
+                    isSelected
+                      ? "bg-cyan-400 ring-4 ring-cyan-400/40 animate-pulse"
+                      : reached
+                      ? "bg-red-500 animate-pulse ring-4 ring-red-500/20"
+                      : "bg-slate-600"
                   }`}
                 />
                 <div>
-                  <span className="font-semibold block">{city.name}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`font-semibold block ${isSelected ? "text-cyan-200" : "text-slate-100"}`}>
+                      {city.name}
+                    </span>
+                    <Navigation className={`w-3 h-3 transition-transform group-hover:translate-x-0.5 ${isSelected ? "text-cyan-400" : "text-slate-500 opacity-0 group-hover:opacity-100"}`} />
+                  </div>
                   <span className="text-[10px] text-slate-400 font-mono">
                     {city.distance_km.toFixed(1)} km &middot; {Math.round(city.elevation_m)}m elev
                   </span>
@@ -120,14 +140,14 @@ export default function ImpactStats({
               </div>
 
               <div className="text-right font-mono">
-                <span className={`block font-bold ${reached ? "text-red-300" : "text-slate-400"}`}>
+                <span className={`block font-bold ${isSelected ? "text-cyan-300" : reached ? "text-red-300" : "text-slate-400"}`}>
                   +{Math.round(city.arrival_time_min)} min
                 </span>
-                <span className="text-[10px] text-cyan-300">
+                <span className={`text-[10px] ${isSelected ? "text-cyan-200 font-semibold" : "text-cyan-300"}`}>
                   {city.peak_depth_m.toFixed(1)}m depth
                 </span>
               </div>
-            </div>
+            </button>
           );
         })}
       </div>

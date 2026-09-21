@@ -52,3 +52,20 @@ body {
 .maplibregl-ctrl-group button .maplibregl-ctrl-icon {
   filter: invert(1);
 }
+
+.settlement-3d-highlight-marker,
+.cs-3d-floating-marker,
+.origin-pulse-marker {
+  z-index: 50 !important;
+  pointer-events: auto;
+}
+
+.maplibregl-popup-content {
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.maplibregl-popup-tip {
+  display: none !important;
+}

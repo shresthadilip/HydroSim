@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { RiverInfo, SimulationRequest, SimulationResponse, CrossSectionData } from "@/types/simulation";
+import { RiverInfo, SimulationRequest, SimulationResponse, CrossSectionData, AffectedCity } from "@/types/simulation";
 import { fetchRivers, runSimulation } from "@/lib/api";
 import SimulationControls from "@/components/SimulationControls";
 import TimelinePlayer from "@/components/TimelinePlayer";
@@ -45,6 +45,9 @@ export default function Home() {
   // Valley Cross Section Modal State
   const [activeCrossSection, setActiveCrossSection] = useState<CrossSectionData | null>(null);
 
+  // Selected Settlement focus
+  const [selectedSettlement, setSelectedSettlement] = useState<AffectedCity | null>(null);
+
   useEffect(() => {
     fetchRivers().then((rList) => {
       setRivers(rList);
@@ -64,6 +67,7 @@ export default function Home() {
       setCurrentStepIndex(0);
       setIsPlaying(true);
       setActiveTab("impact"); // Auto-switch to impact tab on simulation success
+      setSelectedSettlement(null);
     } catch (err: any) {
       console.error(err);
       setErrorMsg(err.message || "Failed to run simulation. Please ensure the backend is running.");
@@ -76,6 +80,7 @@ export default function Home() {
   const handleReset = () => {
     setSimulationResult(null);
     setActiveCrossSection(null);
+    setSelectedSettlement(null);
     setCurrentStepIndex(0);
     setIsPlaying(false);
     setErrorMsg(null);
@@ -104,6 +109,8 @@ export default function Home() {
           setShowBufferZone={setShowBufferZone}
           activeCrossSection={activeCrossSection}
           onSelectCrossSection={setActiveCrossSection}
+          selectedSettlement={selectedSettlement}
+          onSelectSettlement={setSelectedSettlement}
         />
       )}
 
@@ -204,6 +211,8 @@ export default function Home() {
                     onToggleAffectedZone={() => setShowAffectedZone((prev) => !prev)}
                     showBufferZone={showBufferZone}
                     onToggleBufferZone={() => setShowBufferZone((prev) => !prev)}
+                    selectedSettlement={selectedSettlement}
+                    onSelectSettlement={setSelectedSettlement}
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center py-14 text-center px-4">

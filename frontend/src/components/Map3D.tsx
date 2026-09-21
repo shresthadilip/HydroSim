@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { SimulationResponse, SimulationStep, RiverInfo, CrossSectionData } from "@/types/simulation";
+import { SimulationResponse, SimulationStep, RiverInfo, CrossSectionData, AffectedCity } from "@/types/simulation";
 import { fetchCrossSection } from "@/lib/api";
-import { Mountain, Navigation, Crosshair, AlertTriangle } from "lucide-react";
+import { Mountain, Navigation, Crosshair, AlertTriangle, X } from "lucide-react";
 
 interface Map3DProps {
   river: RiverInfo;
@@ -20,6 +20,8 @@ interface Map3DProps {
   setShowBufferZone?: (show: boolean) => void;
   activeCrossSection?: CrossSectionData | null;
   onSelectCrossSection?: (data: CrossSectionData | null) => void;
+  selectedSettlement?: AffectedCity | null;
+  onSelectSettlement?: (settlement: AffectedCity | null) => void;
 }
 
 function normalizeGeoJSON(data: any): GeoJSON.FeatureCollection {
@@ -125,15 +127,19 @@ export default function Map3D({
   setShowBufferZone: setShowBufferZoneProp,
   activeCrossSection,
   onSelectCrossSection,
+  selectedSettlement,
+  onSelectSettlement,
 }: Map3DProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const originMarkerRef = useRef<maplibregl.Marker | null>(null);
   const frontMarkerRef = useRef<maplibregl.Marker | null>(null);
   const csMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const settlementMarkerRef = useRef<maplibregl.Marker | null>(null);
 
   const simulationResultRef = useRef<SimulationResponse | null>(simulationResult);
   const onSelectCrossSectionRef = useRef(onSelectCrossSection);
+  const onSelectSettlementRef = useRef(onSelectSettlement);
   const isPickingOriginRef = useRef(isPickingOrigin);
 
   useEffect(() => {
@@ -143,6 +149,10 @@ export default function Map3D({
   useEffect(() => {
     onSelectCrossSectionRef.current = onSelectCrossSection;
   }, [onSelectCrossSection]);
+
+  useEffect(() => {
+    onSelectSettlementRef.current = onSelectSettlement;
+  }, [onSelectSettlement]);
 
   useEffect(() => {
     isPickingOriginRef.current = isPickingOrigin;
@@ -400,6 +410,20 @@ export default function Map3D({
         popup.remove();
       });
 
+      // Click on settlement point to select and focus
+      map.on("click", "settlements-layer", (e) => {
+        if (e.features && e.features[0]) {
+          const props = e.features[0].properties || {};
+          const name = props.name;
+          const match = simulationResultRef.current?.affected_settlements.find(
+            (s) => s.name.toLowerCase() === (name || "").toLowerCase()
+          );
+          if (match && onSelectSettlementRef.current) {
+            onSelectSettlementRef.current(match);
+          }
+        }
+      });
+
       setMapLoaded(true);
     });
 
@@ -448,14 +472,20 @@ export default function Map3D({
   // Fly to selected river when river changes
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
-    mapRef.current.flyTo({
-      center: river.default_origin,
-      zoom: river.default_zoom || 12.0,
-      pitch: is3D ? 54 : 0,
-      bearing: is3D ? 115 : 0,
-      duration: 1800,
-      curve: 1.2,
-    });
+    if (
+      river?.default_origin &&
+      Number.isFinite(river.default_origin[0]) &&
+      Number.isFinite(river.default_origin[1])
+    ) {
+      mapRef.current.flyTo({
+        center: river.default_origin,
+        zoom: river.default_zoom || 12.0,
+        pitch: is3D ? 54 : 0,
+        bearing: is3D ? 115 : 0,
+        duration: 1800,
+        curve: 1.2,
+      });
+    }
   }, [river, mapLoaded]);
 
   // Update Full Estimated Flood Extent & Buffer Zone when simulation arrives
@@ -482,7 +512,12 @@ export default function Map3D({
       }
     }
 
-    if (simulationResult) {
+    if (
+      simulationResult &&
+      Array.isArray(originCoords) &&
+      Number.isFinite(originCoords[0]) &&
+      Number.isFinite(originCoords[1])
+    ) {
       mapRef.current.flyTo({
         center: originCoords,
         zoom: 12.5,
@@ -539,7 +574,12 @@ export default function Map3D({
     }
 
     // 5. In-Scene 3D Floating HTML Billboard Marker above the river & Camera focus
-    if (activeCrossSection && activeCrossSection.center_coords) {
+    if (
+      activeCrossSection &&
+      Array.isArray(activeCrossSection.center_coords) &&
+      Number.isFinite(activeCrossSection.center_coords[0]) &&
+      Number.isFinite(activeCrossSection.center_coords[1])
+    ) {
       if (!csMarkerRef.current) {
         const csEl = document.createElement("div");
         csEl.className = "cs-3d-floating-marker";
@@ -566,8 +606,9 @@ export default function Map3D({
       // Smoothly focus map camera on the 3D cross-section location
       map.easeTo({
         center: activeCrossSection.center_coords,
-        zoom: Math.max(map.getZoom(), 13.8),
-        pitch: is3D ? 58 : 0,
+        zoom: 13.0,
+        pitch: is3D ? 48 : 0,
+        bearing: is3D ? 115 : 0,
         duration: 1200,
       });
     } else {
@@ -577,6 +618,66 @@ export default function Map3D({
       }
     }
   }, [activeCrossSection, mapLoaded]);
+
+  // Focus and display 3D billboard on selected downstream settlement
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const map = mapRef.current;
+
+    if (
+      selectedSettlement &&
+      typeof selectedSettlement.lon === "number" &&
+      typeof selectedSettlement.lat === "number" &&
+      Number.isFinite(selectedSettlement.lon) &&
+      Number.isFinite(selectedSettlement.lat)
+    ) {
+      const coords: [number, number] = [selectedSettlement.lon, selectedSettlement.lat];
+
+      if (settlementMarkerRef.current) {
+        settlementMarkerRef.current.remove();
+        settlementMarkerRef.current = null;
+      }
+
+      const el = document.createElement("div");
+      el.className = "settlement-3d-highlight-marker";
+      el.innerHTML = `
+        <div class="relative group cursor-pointer -translate-y-8 select-none">
+          <div class="flex items-center gap-2.5 px-3.5 py-2 bg-slate-900/95 border-2 border-amber-400 text-slate-100 rounded-2xl shadow-2xl backdrop-blur-xl text-xs font-bold ring-4 ring-amber-500/25">
+            <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1.5">
+                <span class="text-amber-300 text-[12px] font-extrabold uppercase tracking-wider">${selectedSettlement.name}</span>
+                <span class="text-[10px] text-slate-400 font-mono">(${selectedSettlement.distance_km.toFixed(1)} km)</span>
+              </div>
+              <div class="flex items-center gap-2 text-[11px] font-mono text-slate-300 mt-0.5">
+                <span>Depth: <b class="text-cyan-300">${selectedSettlement.peak_depth_m.toFixed(1)}m</b></span>
+                <span>&middot;</span>
+                <span>Arrival: <b class="text-red-300">+${Math.round(selectedSettlement.arrival_time_min)} min</b></span>
+              </div>
+            </div>
+          </div>
+          <div class="w-3 h-3 bg-amber-400 rotate-45 mx-auto -mt-1.5 shadow-md"></div>
+        </div>
+      `;
+
+      settlementMarkerRef.current = new maplibregl.Marker({ element: el, anchor: "bottom" })
+        .setLngLat(coords)
+        .addTo(map);
+
+      map.easeTo({
+        center: coords,
+        zoom: 12.8,
+        pitch: is3D ? 45 : 0,
+        bearing: is3D ? 115 : 0,
+        duration: 1400,
+      });
+    } else {
+      if (settlementMarkerRef.current) {
+        settlementMarkerRef.current.remove();
+        settlementMarkerRef.current = null;
+      }
+    }
+  }, [selectedSettlement, mapLoaded, is3D]);
 
   // Toggle Visibility of Hydraulic Flood Extent
   useEffect(() => {
@@ -608,26 +709,35 @@ export default function Map3D({
   useEffect(() => {
     if (!mapRef.current) return;
 
-    if (!originMarkerRef.current) {
-      const el = document.createElement("div");
-      el.className = "origin-pulse-marker";
-      el.innerHTML = `
-        <div class="relative flex items-center justify-center cursor-pointer group">
-          <span class="animate-ping absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-6 w-6 bg-gradient-to-tr from-red-600 to-rose-500 border-2 border-white shadow-2xl items-center justify-center text-[11px] text-white font-black">📍</span>
-        </div>
-      `;
+    if (
+      Array.isArray(originCoords) &&
+      originCoords.length >= 2 &&
+      Number.isFinite(originCoords[0]) &&
+      Number.isFinite(originCoords[1])
+    ) {
+      if (!originMarkerRef.current) {
+        const el = document.createElement("div");
+        el.className = "origin-pulse-marker";
+        el.innerHTML = `
+          <div class="relative flex items-center justify-center cursor-pointer group">
+            <span class="animate-ping absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-6 w-6 bg-gradient-to-tr from-red-600 to-rose-500 border-2 border-white shadow-2xl items-center justify-center text-[11px] text-white font-black">📍</span>
+          </div>
+        `;
 
-      originMarkerRef.current = new maplibregl.Marker({ element: el, draggable: true })
-        .setLngLat(originCoords)
-        .addTo(mapRef.current);
+        originMarkerRef.current = new maplibregl.Marker({ element: el, draggable: true })
+          .setLngLat(originCoords)
+          .addTo(mapRef.current);
 
-      originMarkerRef.current.on("dragend", () => {
-        const lngLat = originMarkerRef.current?.getLngLat();
-        if (lngLat) onOriginChange([lngLat.lng, lngLat.lat]);
-      });
-    } else {
-      originMarkerRef.current.setLngLat(originCoords);
+        originMarkerRef.current.on("dragend", () => {
+          const lngLat = originMarkerRef.current?.getLngLat();
+          if (lngLat && Number.isFinite(lngLat.lng) && Number.isFinite(lngLat.lat)) {
+            onOriginChange([lngLat.lng, lngLat.lat]);
+          }
+        });
+      } else {
+        originMarkerRef.current.setLngLat(originCoords);
+      }
     }
   }, [originCoords]);
 
@@ -635,7 +745,11 @@ export default function Map3D({
   useEffect(() => {
     if (!mapRef.current || !mapLoaded) return;
 
-    if (currentStep) {
+    if (
+      currentStep &&
+      Number.isFinite(currentStep.front_lon) &&
+      Number.isFinite(currentStep.front_lat)
+    ) {
       // Update flood front pulse marker
       if (!frontMarkerRef.current) {
         const frontEl = document.createElement("div");
@@ -756,6 +870,19 @@ export default function Map3D({
             <Navigation className={`w-3.5 h-3.5 ${followWave ? "animate-pulse" : ""}`} />
             {followWave ? "Follow Wave ON" : "Follow Wave OFF"}
           </button>
+        )}
+
+        {selectedSettlement && (
+          <div className="flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-xl text-xs font-semibold bg-amber-950/80 text-amber-300 border border-amber-500/50 shadow-md">
+            <span>Focus: <b>{selectedSettlement.name}</b></span>
+            <button
+              onClick={() => onSelectSettlement?.(null)}
+              className="p-1 hover:bg-amber-900/50 rounded-lg text-amber-400 hover:text-white transition-colors"
+              title="Clear settlement focus"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
         )}
       </div>
 
