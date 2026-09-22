@@ -154,9 +154,9 @@ $$\Delta h_{\text{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdo
 ##### Asymmetric Bank Water Surface Elevations
 The water level rises on the outer bank and lowers on the inner bank:
 
-$$\text{WSE}_L(x) = \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)$$
+$$\text{WSE}_L(x) = \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
 
-$$\text{WSE}_R(x) = \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)$$
+$$\text{WSE}_R(x) = \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
 
 #### Step 3: Geometric DEM Transect Sampling & Bank Intersections
 Along $\vec{n}_i$, sample points are placed outward at offsets $o_k \in [8\text{m}, 600\text{m}]$ on both the left ($+ \vec{n}_i$) and right ($- \vec{n}_i$) valley slopes, sampling elevations $Z(o_k)$ from the DEM raster.
