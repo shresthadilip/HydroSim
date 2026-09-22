@@ -139,36 +139,33 @@ $$\vec{n}_i = (-t_y, \; t_x) \quad \implies \quad \vec{n}_i \cdot \vec{t}_i = 0$
 #### Step 2: Channel Curvature & Centrifugal Bend Superelevation
 In sharp mountain river bends and meanders, centrifugal acceleration acts on the high-velocity flow, tilting the water surface transversely across the channel (superelevation $\Delta h$).
 
-1. **River Curvature ($\kappa$) & Radius ($R_c$)**:
-   Given incoming and outgoing reach heading angles $\theta_{i-1}, \theta_i$ along segment length $ds$:
+##### River Curvature ($\kappa$) & Radius ($R_c$)
+Given incoming and outgoing reach heading angles $\theta_{i-1}, \theta_i$ along segment length $ds$:
 
-   $$\kappa = \frac{d\theta}{ds}, \quad R_c = \frac{1}{\max(10^{-4}, |\kappa|)}$$
+$$\kappa = \frac{d\theta}{ds}, \quad R_c = \frac{1}{\max(10^{-4}, |\kappa|)}$$
 
-   - $\kappa > 0$: River turns to the Left (Right bank is outer/concave, Left bank is inner/convex).
-   - $\kappa < 0$: River turns to the Right (Left bank is outer/concave, Right bank is inner/convex).
+- $\kappa > 0$: River turns to the Left (Right bank is outer/concave, Left bank is inner/convex).
+- $\kappa < 0$: River turns to the Right (Left bank is outer/concave, Right bank is inner/convex).
 
-2. **Centrifugal Transverse Superelevation ($\Delta h_{\text{super}}$)**:
+##### Centrifugal Transverse Superelevation ($\Delta h_{\text{super}}$)
 
-   $$\Delta h_{\text{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdot R_c}\right) = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W \cdot |\kappa|}{g}\right)$$
+$$\Delta h_{\text{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdot R_c}\right) = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W \cdot |\kappa|}{g}\right)$$
 
-3. **Asymmetric Bank Water Surface Elevations**:
-   The water level rises on the outer bank and lowers on the inner bank:
+##### Asymmetric Bank Water Surface Elevations
+The water level rises on the outer bank and lowers on the inner bank:
 
-   $$
-   \begin{aligned}
-   \text{WSE}_{\text{left}}(x) &= \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa) \\
-   \text{WSE}_{\text{right}}(x) &= \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)
-   \end{aligned}
-   $$
+$$\text{WSE}_L(x) = \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)$$
+
+$$\text{WSE}_R(x) = \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)$$
 
 #### Step 3: Geometric DEM Transect Sampling & Bank Intersections
 Along $\vec{n}_i$, sample points are placed outward at offsets $o_k \in [8\text{m}, 600\text{m}]$ on both the left ($+ \vec{n}_i$) and right ($- \vec{n}_i$) valley slopes, sampling elevations $Z(o_k)$ from the DEM raster.
 
 The physical bank intersection offsets $w_L(x)$ and $w_R(x)$ are extracted via linear sub-grid interpolation using their respective asymmetric bank water surface elevations:
 
-$$w_L(x) = o_{k-1} + \left(\frac{\text{WSE}_{\text{left}}(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
+$$w_L(x) = o_{k-1} + \left(\frac{\text{WSE}_L(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
 
-$$w_R(x) = o_{k-1} + \left(\frac{\text{WSE}_{\text{right}}(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
+$$w_R(x) = o_{k-1} + \left(\frac{\text{WSE}_R(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
 
 In sharp bends, this causes the outer bank inundation boundary to climb higher up the valley wall while the inner bank stays tighter, matching physical hydraulic behavior.
 
@@ -199,12 +196,18 @@ When a user clicks on the map at coordinate $(lon_{\text{click}}, lat_{\text{cli
 
 4. **Hydrodynamic Sub-Grid Bathymetry Carving**:
    Because satellite DEM rasters (30m resolution) cannot resolve underwater river channels, the bedrock elevation is carved hydrodynamically:
-   - **Inside Channel** ($|w| \le w_{\text{flood}}$):
-     $$Z_{\text{channel}}(w) = Z_{\text{bed}} + h \cdot \left(\frac{|w|}{w_{\text{flood}}}\right)^{1.7}$$
-     Center elevation is strictly $Z_{\text{bed}}$ (depth = $h$ below $\text{WSE}$), smoothly rising to $\text{WSE}$ at both banks ($w = \pm w_{\text{flood}}$).
-   - **Outside Channel** ($|w| > w_{\text{flood}}$):
-     $$Z_{\text{valley}}(w) = \text{WSE} + \max\left(0, \; Z_{\text{DEM}}(w) - Z_{\text{DEM}}(w_{\text{bank}})\right)$$
-     The profile blends with the real DEM mountain valley slopes rising above $\text{WSE}$.
+
+   * **Inside Channel** ($|w| \le w_{\text{flood}}$):
+
+$$Z_{\text{channel}}(w) = Z_{\text{bed}} + h \cdot \left(\frac{|w|}{w_{\text{flood}}}\right)^{1.7}$$
+
+   Center elevation is strictly $Z_{\text{bed}}$ (depth = $h$ below $\text{WSE}$), smoothly rising to $\text{WSE}$ at both banks ($w = \pm w_{\text{flood}}$).
+
+   * **Outside Channel** ($|w| > w_{\text{flood}}$):
+
+$$Z_{\text{valley}}(w) = \text{WSE} + \max\left(0, \; Z_{\text{DEM}}(w) - Z_{\text{DEM}}(w_{\text{bank}})\right)$$
+
+   The profile blends with the real DEM mountain valley slopes rising above $\text{WSE}$.
 
 5. **Non-Overlapping 3D Extruded Vertical Planes**:
    In the 3D scene, two distinct, non-overlapping vertical planes are rendered:
