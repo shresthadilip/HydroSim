@@ -141,17 +141,25 @@ In sharp mountain river bends and meanders, centrifugal acceleration acts on the
 
 1. **River Curvature ($\kappa$) & Radius ($R_c$)**:
    Given incoming and outgoing reach heading angles $\theta_{i-1}, \theta_i$ along segment length $ds$:
+
    $$\kappa = \frac{d\theta}{ds}, \quad R_c = \frac{1}{\max(10^{-4}, |\kappa|)}$$
+
    - $\kappa > 0$: River turns to the Left (Right bank is outer/concave, Left bank is inner/convex).
    - $\kappa < 0$: River turns to the Right (Left bank is outer/concave, Right bank is inner/convex).
 
 2. **Centrifugal Transverse Superelevation ($\Delta h_{\text{super}}$)**:
+
    $$\Delta h_{\text{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdot R_c}\right) = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W \cdot |\kappa|}{g}\right)$$
 
 3. **Asymmetric Bank Water Surface Elevations**:
    The water level rises on the outer bank and lowers on the inner bank:
-   $$\text{WSE}_{\text{left}}(x) = \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
-   $$\text{WSE}_{\text{right}}(x) = \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
+
+   $$
+   \begin{aligned}
+   \text{WSE}_{\text{left}}(x) &= \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa) \\
+   \text{WSE}_{\text{right}}(x) &= \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \operatorname{sign}(\kappa)
+   \end{aligned}
+   $$
 
 #### Step 3: Geometric DEM Transect Sampling & Bank Intersections
 Along $\vec{n}_i$, sample points are placed outward at offsets $o_k \in [8\text{m}, 600\text{m}]$ on both the left ($+ \vec{n}_i$) and right ($- \vec{n}_i$) valley slopes, sampling elevations $Z(o_k)$ from the DEM raster.
