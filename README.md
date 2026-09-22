@@ -40,15 +40,11 @@ This section provides the complete mathematical and physical principles governin
 
 When an upstream reservoir, glacial lake, or landslide dam releases a volume $V$ ($\text{m}^3$) over breach duration $t_d$ ($\text{hours}$), the initial peak outflow discharge $Q_{0}$ at the breach origin is modeled using a triangular/trapezoidal unit hydrograph peak:
 
-$$
-Q_{0} = 1.5 \cdot \frac{V}{t_d \cdot 3600}
-$$
+$$Q_{0} = 1.5 \cdot \frac{V}{t_d \cdot 3600}$$
 
 As the flood wave routes downstream through a mountain valley, channel storage, bed friction, and turbulent dispersion attenuate the peak discharge over stream distance $x$ ($\text{km}$):
 
-$$
-Q_p(x) = Q_0 \cdot \exp(-k \cdot x)
-$$
+$$Q_p(x) = Q_0 \cdot \exp(-k \cdot x)$$
 
 where $k \approx 0.006\text{ km}^{-1}$ represents the spatial peak attenuation rate in steep Himalayan gorges.
 
@@ -60,9 +56,7 @@ The river centerline is discretized into station points $P_i(lon_i, lat_i)$ with
 
 The local energy / bed slope $S_0(x_i)$ is computed using central finite differences across neighboring stations:
 
-$$
-S_0(x_i) = \max\left(0.0005, \; \frac{Z_{\text{bed}}(x_{i-2}) - Z_{\text{bed}}(x_{i+2})}{x_{i+2} - x_{i-2}}\right)
-$$
+$$S_0(x_i) = \max\left(0.0005, \; \frac{Z_{\text{bed}}(x_{i-2}) - Z_{\text{bed}}(x_{i+2})}{x_{i+2} - x_{i-2}}\right)$$
 
 Slopes are smoothed using a centered rolling median window ($W = 5$) to filter DEM raster quantization artifacts while preserving steep rapid drops.
 
@@ -72,36 +66,21 @@ Slopes are smoothed using a centered rolling median window ($W = 5$) to filter D
 
 Open-channel flow depth $y(x)$ (or $h$) is computed by equating the physical discharge $Q(x)$ to the **Manning-Strickler equation** for a parameterized valley cross-section:
 
-$$
-Q = \frac{1}{n} \cdot A(y) \cdot \left[R_h(y)\right]^{2/3} \cdot S_0^{1/2}
-$$
+$$Q = \frac{1}{n} \cdot A(y) \cdot \left[R_h(y)\right]^{2/3} \cdot S_0^{1/2}$$
 
 For a trapezoidal / parabolic mountain valley with base width $b_0(x)$ and side-slope ratio $z_{\text{side}}(x)$ (horizontal : vertical):
-
 - **Wetted Cross-Sectional Area**:
-  $$
-  A(y) = (b_0 + z_{\text{side}} \cdot y) \cdot y
-  $$
-
+  $$A(y) = (b_0 + z_{\text{side}} \cdot y) \cdot y$$
 - **Wetted Perimeter**:
-  $$
-  P(y) = b_0 + 2 \cdot y \cdot \sqrt{1 + z_{\text{side}}^2}
-  $$
-
+  $$P(y) = b_0 + 2 \cdot y \cdot \sqrt{1 + z_{\text{side}}^2}$$
 - **Hydraulic Radius**:
-  $$
-  R_h(y) = \frac{A(y)}{P(y)} = \frac{(b_0 + z_{\text{side}} \cdot y) \cdot y}{b_0 + 2 \cdot y \cdot \sqrt{1 + z_{\text{side}}^2}}
-  $$
-
+  $$R_h(y) = \frac{A(y)}{P(y)} = \frac{(b_0 + z_{\text{side}} \cdot y) \cdot y}{b_0 + 2 \cdot y \cdot \sqrt{1 + z_{\text{side}}^2}}$$
 - $n$: Manning roughness coefficient ($0.040 \le n \le 0.055$ for steep mountain gravel and boulder rivers).
 
 #### Numerical Root Finding (Brent's Method)
-
 To solve for depth $y$, the non-linear residual function:
 
-$$
-f(y) = \frac{1}{n} \cdot (b_0 + z_{\text{side}} y) y \cdot \left(\frac{(b_0 + z_{\text{side}} y) y}{b_0 + 2 y \sqrt{1 + z_{\text{side}}^2}}\right)^{2/3} \cdot \sqrt{S_0} - Q(x) = 0
-$$
+$$f(y) = \frac{1}{n} \cdot (b_0 + z_{\text{side}} y) y \cdot \left(\frac{(b_0 + z_{\text{side}} y) y}{b_0 + 2 y \sqrt{1 + z_{\text{side}}^2}}\right)^{2/3} \cdot \sqrt{S_0} - Q(x) = 0$$
 
 is solved numerically using **Brent's method** (`scipy.optimize.root_scalar(method='brentq')`) over the bracket $[0.01\text{m}, 100.0\text{m}]$ to achieve convergence within $10^{-6}\text{m}$ precision.
 
@@ -112,25 +91,16 @@ is solved numerically using **Brent's method** (`scipy.optimize.root_scalar(meth
 Once depth $y(x)$ and area $A(x)$ are resolved:
 
 1. **Mean Cross-Sectional Flow Velocity**:
-   $$
-   v(x) = \frac{Q(x)}{A(x)}
-   $$
+   $$v(x) = \frac{Q(x)}{A(x)}$$
 
 2. **Kinematic Flood Wave Celerity ($c$)**:
    In turbulent, friction-dominated shallow open channels, flood wave disturbance propagates faster than bulk water velocity:
-   $$
-   c(x) = \beta \cdot v(x), \quad \text{where } \beta = \frac{5}{3} \approx 1.67
-   $$
+   $$c(x) = \beta \cdot v(x), \quad \text{where } \beta = \frac{5}{3} \approx 1.67$$
 
 3. **Cumulative Flood Arrival Time**:
    The travel time $T(x)$ required for the leading flood wave front to reach station $x$ from the breach origin ($x=0$) is computed via piecewise trapezoidal numerical integration:
-   $$
-   T(x) = \int_0^x \frac{d\xi}{c(\xi)} \approx \sum_{i=1}^{N} \frac{\Delta x_i}{\frac{c(x_i) + c(x_{i-1})}{2}}
-   $$
-
-   $$
-   T_{\text{minutes}}(x) = \frac{T(x)}{60}
-   $$
+   $$T(x) = \int_0^x \frac{d\xi}{c(\xi)} \approx \sum_{i=1}^{N} \frac{\Delta x_i}{\frac{c(x_i) + c(x_{i-1})}{2}}$$
+   $$T_{\text{minutes}}(x) = \frac{T(x)}{60}$$
 
 ---
 
@@ -138,9 +108,7 @@ Once depth $y(x)$ and area $A(x)$ are resolved:
 
 Water Surface Elevation ($\text{WSE}$) represents the absolute geodetic elevation (meters above sea level) of the water surface plane at station $x$:
 
-$$
-\text{WSE}(x) = Z_{\text{bed}}(x) + y(x)
-$$
+$$\text{WSE}(x) = Z_{\text{bed}}(x) + y(x)$$
 
 ---
 
@@ -162,71 +130,48 @@ Station i-1                       Station i                       Station i+1
 ```
 
 #### Step 1: Metric Projection & Normal Vector Computation
-
 The river centerline is projected to Metric UTM Coordinates ($\text{EPSG:32645}$). At station $i$, the local flow tangent vector $\vec{t}_i$ and strictly perpendicular normal unit vector $\vec{n}_i$ are:
 
-$$
-\vec{t}_i = \left(\frac{x_{i+1} - x_{i-1}}{\|\Delta P\|}, \; \frac{y_{i+1} - y_{i-1}}{\|\Delta P\|}\right) = (t_x, t_y)
-$$
+$$\vec{t}_i = \left(\frac{x_{i+1} - x_{i-1}}{\|\Delta P\|}, \; \frac{y_{i+1} - y_{i-1}}{\|\Delta P\|}\right) = (t_x, t_y)$$
 
-$$
-\vec{n}_i = (-t_y, \; t_x) \quad \implies \quad \vec{n}_i \cdot \vec{t}_i = 0
-$$
+$$\vec{n}_i = (-t_y, \; t_x) \quad \implies \quad \vec{n}_i \cdot \vec{t}_i = 0$$
 
 #### Step 2: Channel Curvature & Centrifugal Bend Superelevation
-
 In sharp mountain river bends and meanders, centrifugal acceleration acts on the high-velocity flow, tilting the water surface transversely across the channel (superelevation $\Delta h$).
 
-- **River Curvature ($\kappa$) & Radius ($R_c$)**:  
-  Given incoming and outgoing reach heading angles $\theta_{i-1}, \theta_i$ along segment length $ds$:
-  $$
-  \kappa = \frac{d\theta}{ds}, \quad R_c = \frac{1}{\max(10^{-4}, |\kappa|)}
-  $$
-  where $\kappa > 0$ indicates a turn to the left, and $\kappa < 0$ indicates a turn to the right.
+1. **River Curvature ($\kappa$) & Radius ($R_c$)**:
+   Given incoming and outgoing reach heading angles $\theta_{i-1}, \theta_i$ along segment length $ds$:
+   $$\kappa = \frac{d\theta}{ds}, \quad R_c = \frac{1}{\max(10^{-4}, |\kappa|)}$$
+   - $\kappa > 0$: River turns to the Left (Right bank is outer/concave, Left bank is inner/convex).
+   - $\kappa < 0$: River turns to the Right (Left bank is outer/concave, Right bank is inner/convex).
 
-- **Centrifugal Transverse Superelevation ($\Delta h_{\mathrm{super}}$)**:
-  $$
-  \Delta h_{\mathrm{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdot R_c}\right) = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W \cdot |\kappa|}{g}\right)
-  $$
+2. **Centrifugal Transverse Superelevation ($\Delta h_{\text{super}}$)**:
+   $$\Delta h_{\text{super}} = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W}{g \cdot R_c}\right) = \min\left(0.35 \cdot h, \; \frac{v^2 \cdot W \cdot |\kappa|}{g}\right)$$
 
-- **Asymmetric Bank Water Surface Elevations**:  
-  The water level rises on the outer bank and lowers on the inner bank:
-  $$
-  \text{WSE}_L(x) = \text{WSE}(x) - \frac{\Delta h_{\mathrm{super}}}{2} \cdot \operatorname{sign}(\kappa)
-  $$
-
-  $$
-  \text{WSE}_R(x) = \text{WSE}(x) + \frac{\Delta h_{\mathrm{super}}}{2} \cdot \operatorname{sign}(\kappa)
-  $$
+3. **Asymmetric Bank Water Surface Elevations**:
+   The water level rises on the outer bank and lowers on the inner bank:
+   $$\text{WSE}_{\text{left}}(x) = \text{WSE}(x) - \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
+   $$\text{WSE}_{\text{right}}(x) = \text{WSE}(x) + \frac{\Delta h_{\text{super}}}{2} \cdot \text{sign}(\kappa)$$
 
 #### Step 3: Geometric DEM Transect Sampling & Bank Intersections
-
 Along $\vec{n}_i$, sample points are placed outward at offsets $o_k \in [8\text{m}, 600\text{m}]$ on both the left ($+ \vec{n}_i$) and right ($- \vec{n}_i$) valley slopes, sampling elevations $Z(o_k)$ from the DEM raster.
 
 The physical bank intersection offsets $w_L(x)$ and $w_R(x)$ are extracted via linear sub-grid interpolation using their respective asymmetric bank water surface elevations:
 
-$$
-w_L(x) = o_{k-1} + \left(\frac{\text{WSE}_L(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})
-$$
+$$w_L(x) = o_{k-1} + \left(\frac{\text{WSE}_{\text{left}}(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
 
-$$
-w_R(x) = o_{k-1} + \left(\frac{\text{WSE}_R(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})
-$$
+$$w_R(x) = o_{k-1} + \left(\frac{\text{WSE}_{\text{right}}(x) - Z(o_{k-1})}{Z(o_k) - Z(o_{k-1})}\right) \cdot (o_k - o_{k-1})$$
 
 In sharp bends, this causes the outer bank inundation boundary to climb higher up the valley wall while the inner bank stays tighter, matching physical hydraulic behavior.
 
 #### Step 4: Mesh Polygon Construction & Geodesic Transformation
-
 For each step along the river, a quad is formed between consecutive stations $i$ and $i+1$:
 
-$$
-\text{Quad}_i = \left[\left(P_i + \vec{n}_i w_{L,i}\right), \; \left(P_{i+1} + \vec{n}_{i+1} w_{L,i+1}\right), \; \left(P_{i+1} - \vec{n}_{i+1} w_{R,i+1}\right), \; \left(P_i - \vec{n}_i w_{R,i}\right), \; \left(P_i + \vec{n}_i w_{L,i}\right)\right]
-$$
+$$\text{Quad}_i = \left[\left(P_i + \vec{n}_i w_{L,i}\right), \; \left(P_{i+1} + \vec{n}_{i+1} w_{L,i+1}\right), \; \left(P_{i+1} - \vec{n}_{i+1} w_{R,i+1}\right), \; \left(P_i - \vec{n}_i w_{R,i}\right), \; \left(P_i + \vec{n}_i w_{L,i}\right)\right]$$
 
 Individual segment quads are dissolved into a single unified polygon using `shapely.ops.unary_union`, transformed back to WGS84 coordinates ($\text{EPSG:4326}$), and converted into GeoJSON.
 
 #### Buffer Envelope
-
 The disaster evaluation safety buffer (e.g. 2.0 km corridor) is generated by offsetting $P_i \pm \frac{W_{\text{buf}}}{2} \cdot \vec{n}_i$, forming a continuous risk assessment envelope across the entire valley.
 
 ---
@@ -235,31 +180,25 @@ The disaster evaluation safety buffer (e.g. 2.0 km corridor) is generated by off
 
 When a user clicks on the map at coordinate $(lon_{\text{click}}, lat_{\text{click}})$:
 
-1. **Orthogonal Projection**:  
+1. **Orthogonal Projection**:
    The point is projected onto the metric river centerline via `downstream_m.project(click_pt)` to identify the exact station distance $s$ along the reach.
 
-2. **Perpendicular Transect Orientation**:  
+2. **Perpendicular Transect Orientation**:
    Forward and backward points $P(s + \delta)$ and $P(s - \delta)$ (with $\delta = 35\text{m}$) are sampled to compute the local smoothed unit tangent $\vec{t}$ and perpendicular normal vector $\vec{n} = (-t_y, t_x)$.
 
-3. **Dense Profile Sampling (101 Points)**:  
+3. **Dense Profile Sampling (101 Points)**:
    A transect spanning the entire valley (e.g. $\pm 1150\text{m}$) is sampled across 101 points, explicitly incorporating the thalweg ($0\text{m}$) and exact left/right flood bank offsets ($w_L, w_R$).
 
-4. **Hydrodynamic Sub-Grid Bathymetry Carving**:  
+4. **Hydrodynamic Sub-Grid Bathymetry Carving**:
    Because satellite DEM rasters (30m resolution) cannot resolve underwater river channels, the bedrock elevation is carved hydrodynamically:
-
    - **Inside Channel** ($|w| \le w_{\text{flood}}$):
-     $$
-     Z_{\text{channel}}(w) = Z_{\text{bed}} + h \cdot \left(\frac{|w|}{w_{\text{flood}}}\right)^{1.7}
-     $$
+     $$Z_{\text{channel}}(w) = Z_{\text{bed}} + h \cdot \left(\frac{|w|}{w_{\text{flood}}}\right)^{1.7}$$
      Center elevation is strictly $Z_{\text{bed}}$ (depth = $h$ below $\text{WSE}$), smoothly rising to $\text{WSE}$ at both banks ($w = \pm w_{\text{flood}}$).
-
    - **Outside Channel** ($|w| > w_{\text{flood}}$):
-     $$
-     Z_{\text{valley}}(w) = \text{WSE} + \max\left(0, \; Z_{\text{DEM}}(w) - Z_{\text{DEM}}(w_{\text{bank}})\right)
-     $$
+     $$Z_{\text{valley}}(w) = \text{WSE} + \max\left(0, \; Z_{\text{DEM}}(w) - Z_{\text{DEM}}(w_{\text{bank}})\right)$$
      The profile blends with the real DEM mountain valley slopes rising above $\text{WSE}$.
 
-5. **Non-Overlapping 3D Extruded Vertical Planes**:  
+5. **Non-Overlapping 3D Extruded Vertical Planes**:
    In the 3D scene, two distinct, non-overlapping vertical planes are rendered:
    - **Blue Flood Extent Plane**: Spans $[-w_{\text{flood}}, +w_{\text{flood}}]$ with $1.0\text{m}$ ribbon thickness and height $H = \max(20\text{m}, 3h)$.
    - **Orange Buffer Plane**: Spans $[-w_{\text{buffer}}, -w_{\text{flood}}] \cup [+w_{\text{flood}}, +w_{\text{buffer}}]$ as a `MultiPolygon` on the valley slopes.
@@ -270,7 +209,7 @@ When a user clicks on the map at coordinate $(lon_{\text{click}}, lat_{\text{cli
 ## Architecture & Project Structure
 
 ```
-HydroSim/
+rasuwa-flood/
 ├── backend/
 │   ├── app/
 │   │   ├── main.py                     # FastAPI application entry point, CORS & routing
