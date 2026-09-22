@@ -191,17 +191,17 @@ When a user clicks on the map at coordinate $(lon_{\text{click}}, lat_{\text{cli
 
 4. **Hydrodynamic Sub-Grid Bathymetry Carving**:
    Because satellite DEM rasters (30m resolution) cannot resolve underwater river channels, the bedrock elevation is carved hydrodynamically:
-   - **Inside Channel** ($|\text{offset}| \le \text{flood\_half\_width}$):
-     $$Z_{\text{channel}}(\text{off}) = Z_{\text{bed}} + h \cdot \left(\frac{|\text{off}|}{\text{flood\_half\_width}}\right)^{1.7}$$
-     Center elevation is strictly $Z_{\text{bed}}$ (depth = $h$ below $\text{WSE}$), smoothly rising to $\text{WSE}$ at both banks.
-   - **Outside Channel** ($|\text{offset}| > \text{flood\_half\_width}$):
-     $$Z_{\text{valley}}(\text{off}) = \text{WSE} + \max(0, \; Z_{\text{DEM}}(\text{off}) - Z_{\text{DEM}}(\text{bank}))$$
+   - **Inside Channel** ($|w| \le w_{\text{flood}}$):
+     $$Z_{\text{channel}}(w) = Z_{\text{bed}} + h \cdot \left(\frac{|w|}{w_{\text{flood}}}\right)^{1.7}$$
+     Center elevation is strictly $Z_{\text{bed}}$ (depth = $h$ below $\text{WSE}$), smoothly rising to $\text{WSE}$ at both banks ($w = \pm w_{\text{flood}}$).
+   - **Outside Channel** ($|w| > w_{\text{flood}}$):
+     $$Z_{\text{valley}}(w) = \text{WSE} + \max\left(0, \; Z_{\text{DEM}}(w) - Z_{\text{DEM}}(w_{\text{bank}})\right)$$
      The profile blends with the real DEM mountain valley slopes rising above $\text{WSE}$.
 
 5. **Non-Overlapping 3D Extruded Vertical Planes**:
    In the 3D scene, two distinct, non-overlapping vertical planes are rendered:
-   - **Blue Flood Extent Plane**: Spans $[-\text{flood\_half\_width}, +\text{flood\_half\_width}]$ with $1.0\text{m}$ ribbon thickness and height $H = \max(20\text{m}, 3h)$.
-   - **Orange Buffer Plane**: Spans $[-\text{buffer\_half\_width}, -\text{flood\_half\_width}] \cup [+\text{flood\_half\_width}, +\text{buffer\_half\_width}]$ as a `MultiPolygon` on the valley slopes.
+   - **Blue Flood Extent Plane**: Spans $[-w_{\text{flood}}, +w_{\text{flood}}]$ with $1.0\text{m}$ ribbon thickness and height $H = \max(20\text{m}, 3h)$.
+   - **Orange Buffer Plane**: Spans $[-w_{\text{buffer}}, -w_{\text{flood}}] \cup [+w_{\text{flood}}, +w_{\text{buffer}}]$ as a `MultiPolygon` on the valley slopes.
    - Both planes are densely tessellated along transect offsets so their base vertices hug the 3D terrain mesh without clipping or floating.
 
 ---
